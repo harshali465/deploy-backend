@@ -1,18 +1,21 @@
 name: 'Deploy Node.js Backend to EC2'
 description: 'Deploys a Node.js backend app to EC2 via SCP and SSH'
 
-secrets:
+inputs:
   host:
+    description: EC2 public IP / DNS
     required: true
   username:
+    description: SSH user
     required: true
   key:
+    description: Private SSH key (use a GitHub secret in the workflow)
     required: true
-    
-inputs:
   app-name:
+    description: Name to give the PM2 process
     required: true
-  target-path:
+  target:
+    description: Remote path where the code will live
     required: true
 
 runs:
@@ -25,7 +28,7 @@ runs:
         username: ${{ secrets.username }}
         key: ${{ secrets.key }}
         source: "."
-        target: ${{ inputs.target-path }}
+        target: ${{ inputs.target }}
         strip_components: 1
 
     - name: Run backend on EC2
@@ -35,6 +38,6 @@ runs:
         username: ${{ secrets.username }}
         key: ${{ secrets.key }}
         script: |
-          cd ${{ inputs.target-path }}
+          cd ${{ inputs.target }}
           npm install
           /usr/bin/pm2 restart ${{ inputs.app-name }} || /usr/bin/pm2 start server.js --name ${{ inputs.app-name }}
