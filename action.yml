@@ -24,9 +24,9 @@ runs:
     - name: Upload backend to EC2
       uses: appleboy/scp-action@v0.1.7
       with:
-        host: ${{ secrets.host }}
-        username: ${{ secrets.username }}
-        key: ${{ secrets.key }}
+        host: ${{ inputs.host }}
+        username: ${{ inputs.username }}
+        key: ${{ inputs.key }}
         source: "."
         target: ${{ inputs.target }}
         strip_components: 1
@@ -34,9 +34,9 @@ runs:
     - name: Run backend on EC2
       uses: appleboy/ssh-action@v1.0.0
       with:
-        host: ${{ secrets.host }}
-        username: ${{ secrets.username }}
-        key: ${{ secrets.key }}
+        host: ${{ inputs.host }}
+        username: ${{ inputs.username }}
+        key: ${{ inputs.key }}
         script: |
           cd ${{ inputs.target }}
           npm install
